@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AuthorizationsController;
+use App\Http\Controllers\Api\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('v1')->name('api.v1.')->group(function(){
+    Route::resource('news', NewsController::class, ['only' => ['index','show']]);
+    Route::get('/newsList', [ NewsController::class, 'listPage' ]);
+
+    // 小程序登录
+    Route::post('weapp/authorizations', [AuthorizationsController::class, 'weappStore']);
+});
+
+
