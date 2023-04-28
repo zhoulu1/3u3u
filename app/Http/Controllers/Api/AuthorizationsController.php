@@ -23,7 +23,7 @@ class AuthorizationsController extends Controller
             'grant_type' => 'authorization_code'
         ]);
         if ($response->isFailed()) {
-           return jsonData($response['errcode'], 'error', $response['errmsg']);
+           return jsonData($response['errcode'], $response['errmsg']);
         }
         // // 找到 openid 对应的用户
         $user = User::where('openid', $response['openid'])->first();
