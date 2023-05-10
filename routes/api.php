@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CategoriesController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrdersController;
+use App\Http\Controllers\Api\UsersController;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,8 @@ Route::prefix('v1')->name('api.v1.')->group(function(){
 
     Route::middleware('auth:api')->group(function() {
         Route::resource('orders', OrdersController::class, ['only' => ['index','store']]);
+        Route::post('order.receive', [ OrdersController::class, 'receive' ]);
+        Route::get('/user', [ UsersController::class, 'me' ]);
      });
     // 小程序登录
     Route::post('authorizations', [AuthorizationsController::class, 'weappStore']);
