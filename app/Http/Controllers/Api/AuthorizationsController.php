@@ -7,6 +7,7 @@ use App\Http\Requests\Api\WeappAuthorizationRequest;
 use App\Models\User;
 use EasyWeChat\MiniApp\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorizationsController extends Controller
 {
@@ -34,6 +35,7 @@ class AuthorizationsController extends Controller
                 'openid' => $response['openid'],
             ]);
         }
-        return jsonData(200, '', $user);
+        $token = Auth::guard('api')->login($user);
+        return jsonData(200, '', ['token' => $token]);
     }
 }
