@@ -19,10 +19,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'openid',
+        'name', 'email', 'password', 'openid', 'role', 'mobile', 'integral', 'user_id', 'referrals', 'total', 'balance',
+        'promo_code'
     ];
 
     /**
@@ -44,6 +42,10 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'is_recycler',
+    ];
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -52,5 +54,14 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function recycler()
+    {
+        return $this->hasOne(Recycler::class);
+    }
+
+    public function getIsRecyclerAttribute(){
+        return strpos( $this->role, 'recycler') ? true : false;
     }
 }

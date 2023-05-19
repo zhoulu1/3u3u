@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthorizationsController;
 use App\Http\Controllers\Api\CategoriesController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\OrdersController;
+use App\Http\Controllers\Api\RecyclersController;
 use App\Http\Controllers\Api\UsersController;
 use App\Models\Categories;
 use Illuminate\Http\Request;
@@ -34,6 +35,9 @@ Route::prefix('v1')->name('api.v1.')->group(function(){
         Route::resource('orders', OrdersController::class, ['only' => ['index','store']]);
         Route::post('order.receive', [ OrdersController::class, 'receive' ]);
         Route::get('/user', [ UsersController::class, 'me' ]);
+        Route::get('/getArea', [ RecyclersController::class, 'getArea' ]);
+        Route::post('/applyRecycler', [ RecyclersController::class, 'store' ]);
+        Route::get('/recycler', [ RecyclersController::class, 'index' ]);
      });
     // 小程序登录
     Route::post('authorizations', [AuthorizationsController::class, 'weappStore']);

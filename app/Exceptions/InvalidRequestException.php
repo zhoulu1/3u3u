@@ -7,7 +7,7 @@ use Exception;
 
 class InvalidRequestException extends Exception
 {
-    public function __construct($message, int $code = 403)
+    public function __construct($message, int $code = 400)
     {
         parent::__construct($message, $code);
     }
