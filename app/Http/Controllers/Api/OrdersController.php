@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrdersRequest;
 use App\Models\Orders;
@@ -20,6 +21,7 @@ class OrdersController extends Controller
             // 订单关联到用户
             $order->user()->associate($user);
             $order->save();
+            event(new OrderCreated($order));
         });
         return jsonData(200, 'success!');
     }
