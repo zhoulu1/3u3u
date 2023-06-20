@@ -46,4 +46,42 @@ class OrdersController extends Controller
         });
         return jsonData(200, 'success!');
     }
+
+    public function finish(Request $request){
+        if(empty($request['order_id'])){
+            return jsonData(400, '参数错误！');
+        }
+        DB::transaction(function () use ($request) {
+            Orders::where('id', $request['order_id'])->update([
+                'status' => Orders::STATUS_FINISHED, 
+                'weight' => $request['weight'],
+                'total_amount' => $request['total_amount'],
+                'remark' => $request['remark']
+            ]);
+        });
+        return jsonData(200, 'success!');
+    }
+
+    public function receiveList(Request $request){
+        $page_size = $request->page_size ?: 15;
+        if($request->order == 'time'){
+            $item = 'appointment_time';
+            $order = 'asc';
+        }else{
+            $item = 'created_at';
+            $order = 'asc';
+        }
+        
+        $builder = Orders::query();
+        if($request->status) $builder->where('status', $request->status);
+        if($request->recycler_id) $builder->where('recycler_id', $request->user()->id);
+        if($request->order == 'delivering'){
+            $builder->where('recycler_id', $request->user()->id); 
+            $builder->where('status', Orders::STATUS_DELIVERING); 
+        }else if($request->order){
+            $builder->where('status', Orders::STATUS_PENDING);
+        }
+        $list = $builder->with(['category','user'])->orderBy($item, $order)->paginate($page_size);
+        return response()->json(['code' => 200,'msg' => 'success','data' => $list]);
+    }
 }

@@ -34,6 +34,8 @@ Route::prefix('v1')->name('api.v1.')->group(function(){
     Route::middleware('auth:api')->group(function() {
         Route::resource('orders', OrdersController::class, ['only' => ['index','store']]);
         Route::post('order.receive', [ OrdersController::class, 'receive' ]);
+        Route::post('order.finish', [ OrdersController::class, 'finish' ]);
+        Route::post('order.receiveList', [ OrdersController::class, 'receiveList' ]);
         Route::get('/user', [ UsersController::class, 'me' ]);
         Route::get('/getArea', [ RecyclersController::class, 'getArea' ]);
         Route::post('/applyRecycler', [ RecyclersController::class, 'store' ]);

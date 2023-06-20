@@ -31,12 +31,43 @@ class Orders extends Model
     ];
 
     protected $appends = [
-        'status_text',
+        'status_text','full_addr','appointment_day','appointment_week','appointment_t'
     ];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
+    }
 
     public function getStatusTextAttribute()
     {
         return $this::$statusMap[$this->status];
+    }
+    public function getAppointmentDayAttribute()
+    {
+        return date('Y-m-d', strtotime($this->appointment_time));
+    }
+    public function getAppointmentWeekAttribute()
+    {
+        $week = date('N', strtotime($this->appointment_time));
+        $arr = [
+            1 => '周一',
+            2 => '周二',
+            3 => '周三',
+            4 => '周四',
+            5 => '周五',
+            6 => '周六',
+            7 => '周日',
+        ];
+        return $arr[$week];     
+    }
+    public function getAppointmentTAttribute()
+    {
+        return date('H:i', strtotime($this->appointment_time)).'~'.date('H:i', strtotime($this->appointment_time)+7200);
+    }
+
+    public function getFullAddrAttribute(){
+        return $this->address['county'].$this->address['detail'];
     }
 
     public function user()
